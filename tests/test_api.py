@@ -1,4 +1,4 @@
-﻿import pytest
+import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app
@@ -56,12 +56,17 @@ def test_database_health_failure(client):
         def execute(self, statement):
             raise RuntimeError("Database unavailable")
 
+        def rollback(self):
+            pass
+
     app.dependency_overrides[get_db] = lambda: FakeDB()
 
     response = client.get("/health/database")
 
-    assert response.status_code == 200
+    assert response.status_code == 503
     assert response.json() == {
-        "status": "error",
-        "database": "disconnected",
+        "detail": {
+            "status": "error",
+            "database": "disconnected",
+        }
     }
