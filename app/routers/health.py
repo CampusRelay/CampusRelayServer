@@ -1,4 +1,4 @@
-﻿from fastapi import APIRouter, Depends
+﻿from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -24,7 +24,11 @@ def database_health(db: Session = Depends(get_db)):
             "database": "connected",
         }
     except Exception:
-        return {
-            "status": "error",
-            "database": "disconnected",
-        }
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail={
+                "status": "error",
+                "database": "disconnected",
+            },
+        )

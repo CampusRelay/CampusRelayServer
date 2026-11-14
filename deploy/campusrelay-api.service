@@ -1,0 +1,22 @@
+[Unit]
+Description=CampusRelay FastAPI Backend
+After=network.target postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=user
+Group=user
+WorkingDirectory=/opt/campus-relay/current
+EnvironmentFile=/etc/campus-relay/server.env
+ExecStart=/opt/campus-relay/current/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8101
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/campus-relay
+
+[Install]
+WantedBy=multi-user.target
