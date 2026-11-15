@@ -1,8 +1,15 @@
-﻿
+from app.routers import classroom_members
+from app.routers import classroom_join_requests
+from app.routers import messages
+from app.routers import devices
+from app.routers import classroom_requests
+from app.routers import teacher_registration
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import health, schools
+from app.routers import auth, health, schools, school_join_codes
+from app.routers import device_websocket
 
 app = FastAPI(
     title="CampusRelay API",
@@ -22,6 +29,7 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
+app.include_router(auth.router)
 app.include_router(schools.router)
 
 
@@ -31,3 +39,18 @@ def root():
         "name": "CampusRelay",
         "message": "CampusRelay API is running",
     }
+
+app.include_router(teacher_registration.router)
+
+app.include_router(school_join_codes.router)
+
+app.include_router(classroom_requests.router)
+
+app.include_router(devices.router)
+
+app.include_router(messages.router)
+
+app.include_router(device_websocket.router)
+
+app.include_router(classroom_members.router)
+app.include_router(classroom_join_requests.router)

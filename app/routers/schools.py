@@ -4,6 +4,7 @@ from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.auth.dependencies import require_platform_admin
 from app.database import get_db
 from app.models import School
 from app.schemas.schools import (
@@ -12,7 +13,11 @@ from app.schemas.schools import (
     SchoolUpdate,
 )
 
-router = APIRouter(prefix="/api/schools", tags=["Schools"])
+router = APIRouter(
+    prefix="/api/schools",
+    tags=["Schools"],
+    dependencies=[Depends(require_platform_admin)],
+)
 
 
 def normalize_school_data(data: dict) -> dict:

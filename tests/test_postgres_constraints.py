@@ -5,14 +5,22 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 
-def create_user(db: Session, email="test@example.com"):
+def create_user(
+    db: Session,
+    email="test@example.com",
+    username="test_user",
+):
     return db.execute(
         text("""
-            INSERT INTO users (email, password_hash, display_name)
-            VALUES (:email, 'test_hash', 'Test User')
+            INSERT INTO users (
+                username, email, password_hash, display_name
+            )
+            VALUES (
+                :username, :email, 'test_hash', 'Test User'
+            )
             RETURNING id
         """),
-        {"email": email},
+        {"username": username, "email": email},
     ).scalar_one()
 
 
@@ -66,10 +74,10 @@ def create_message(db: Session, classroom_id, sender_id):
 
 
 def test_duplicate_user_email_rejected(db_session):
-    create_user(db_session)
+    create_user(db_session, username="test_user_1")
 
     with pytest.raises(IntegrityError):
-        create_user(db_session)
+        create_user(db_session, username="test_user_2")
 
 
 def test_duplicate_school_code_rejected(db_session):

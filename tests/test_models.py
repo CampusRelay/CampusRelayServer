@@ -1,4 +1,4 @@
-﻿from sqlalchemy.orm import configure_mappers
+from sqlalchemy.orm import configure_mappers
 
 from app.database import Base
 from app import models
@@ -9,12 +9,19 @@ EXPECTED_TABLES = {
     "schools",
     "school_memberships",
     "classrooms",
+    "classroom_creation_requests",
+    "classroom_join_requests",
     "classroom_memberships",
     "devices",
     "device_bindings",
     "messages",
     "message_deliveries",
-}
+    "platform_admins",
+    "user_sessions",
+
+    "school_join_codes",
+    "teacher_registration_requests",
+    "registration_rate_limits",}
 
 
 def test_all_models_are_registered():
@@ -28,7 +35,7 @@ def test_all_tables_have_primary_keys():
 
 def test_unique_constraints():
     expected = {
-        "users": {("email",)},
+        "users": {("username",), ("email",)},
         "schools": {("code",)},
         "devices": {("serial_number",)},
         "school_memberships": {("user_id", "school_id")},

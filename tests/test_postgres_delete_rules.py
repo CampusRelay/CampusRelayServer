@@ -4,14 +4,22 @@ from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 
 
-def create_user(db, email="delete-test@example.com"):
+def create_user(
+    db,
+    email="delete-test@example.com",
+    username="delete_test_user",
+):
     return db.execute(
         text("""
-            INSERT INTO users (email, password_hash, display_name)
-            VALUES (:email, 'hash', 'Delete Test')
+            INSERT INTO users (
+                username, email, password_hash, display_name
+            )
+            VALUES (
+                :username, :email, 'hash', 'Delete Test'
+            )
             RETURNING id
         """),
-        {"email": email},
+        {"username": username, "email": email},
     ).scalar_one()
 
 
