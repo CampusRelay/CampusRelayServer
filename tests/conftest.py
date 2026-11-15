@@ -12,6 +12,9 @@ from sqlalchemy.orm import Session
 from app.database import Base, database_url
 from app import models  # noqa: F401
 
+# 仅供 pytest 使用，不得用于生产环境
+os.environ.setdefault("JOIN_CODE_PEPPER", "campusrelay-pytest-only-pepper")
+
 
 @pytest.fixture(scope="session")
 def test_engine():
