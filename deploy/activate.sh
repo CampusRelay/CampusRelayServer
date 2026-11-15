@@ -62,7 +62,7 @@ if [[ -z "${DATABASE_URL:-}" || "${DATABASE_URL}" != postgresql+psycopg://* ]]; 
     exit 1
 fi
 
-"${NEW_RELEASE}/.venv/bin/alembic" -c "${NEW_RELEASE}/alembic.ini" upgrade head
+PYTHONPATH="${NEW_RELEASE}${PYTHONPATH:+:$PYTHONPATH}" "${NEW_RELEASE}/.venv/bin/alembic" -c "${NEW_RELEASE}/alembic.ini" upgrade head
 
 NEXT_LINK="${CURRENT_LINK}.next"
 rm -f -- "${NEXT_LINK}"
